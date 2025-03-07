@@ -44,9 +44,21 @@ void fragment() {
 	float mask3w = texture( mask_tex3, UV - vec2(0, current_time * mask_scroll_speed) ).r ;
 
 	float percent = mod( current_time * mask_scroll_speed, 1.0 );
-	float dist = 0.0;
-	if( mask3w < percent ){ dist = 1.0; }
-	if( mask3w < percent-0.05 ){ dist = 0.0; }
+	float dist = abs(mask3w - percent);
+	if( dist > 0.5 ){
+		dist = 1.0-dist;
+	}
+	if( dist > 0.45 && dist < 0.55 ){
+		dist = 1.0;
+	} else {
+		dist = 0.0;
+	}
+	//dist = 1.0-step( 0.995, dist );
+	//if( mask3w < percent ){ dist = 1.0; }
+	//if( mask3w < percent-0.05 ){ dist = 0.0; }
+	//if( mask3w < 0.05 ){ 
+	//	dist = 0.0;
+	//}
 
 	float brightness = 1.0;
 	if( percent > 0.9 ){ brightness = 1.0 - (percent-0.9) * 1.0; }
