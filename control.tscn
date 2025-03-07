@@ -1,0 +1,170 @@
+[gd_scene load_steps=14 format=3 uid="uid://t7xgn2mlmxl1"]
+
+[ext_resource type="Shader" uid="uid://jrratcxupmrp" path="res://shaders/rotn_vis.gdshader" id="2_m2mkp"]
+[ext_resource type="Texture2D" uid="uid://dasii3l0ek351" path="res://shaders/mask.png" id="3_210ln"]
+[ext_resource type="Texture2D" uid="uid://jlrbbli0snyh" path="res://shaders/art.png" id="3_sxj6y"]
+[ext_resource type="Texture2D" uid="uid://ddfavkor16gty" path="res://shaders/mask2.png" id="5_pgdrp"]
+[ext_resource type="Texture2D" uid="uid://ch6hla5qkspw6" path="res://shaders/mask3.png" id="6_8wpsl"]
+[ext_resource type="Shader" uid="uid://cucq4rbee2u1g" path="res://shaders/vignette.gdshader" id="7_bq0gt"]
+[ext_resource type="Script" uid="uid://4ypptgy0ml1v" path="res://ss.gd" id="7_o0nkl"]
+[ext_resource type="Script" uid="uid://d0qeh6j46ou8h" path="res://ui/mat_tint.gd" id="9_0ytqx"]
+[ext_resource type="Shader" uid="uid://btlsnd3clirux" path="res://shaders/blur_middle.gdshader" id="9_p55pq"]
+[ext_resource type="Script" uid="uid://dfox8n42j8rkk" path="res://ui/begin_render.gd" id="9_sky72"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_akjvq"]
+shader = ExtResource("2_m2mkp")
+shader_parameter/mask_tex = ExtResource("3_210ln")
+shader_parameter/mask_tex2 = ExtResource("5_pgdrp")
+shader_parameter/mask_tex3 = ExtResource("6_8wpsl")
+shader_parameter/mask_scroll_speed = 0.2
+shader_parameter/cover = ExtResource("3_sxj6y")
+shader_parameter/base_colour = Color(0.635294, 0.870588, 0.815686, 1)
+shader_parameter/dark_colour = Color(0.388235, 0.533333, 0.694118, 1)
+shader_parameter/current_time = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_egahm"]
+shader = ExtResource("9_p55pq")
+shader_parameter/blur_radius = 0.3
+shader_parameter/blur_amount = 3.528
+shader_parameter/blur_inner = 0.75
+shader_parameter/blur_outer = 0.878
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f0y7j"]
+shader = ExtResource("7_bq0gt")
+shader_parameter/blur_radius = 0.357
+shader_parameter/blur_amount = 3.684
+shader_parameter/blur_inner = 0.543
+shader_parameter/blur_outer = 1.0
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -18.999
+autoplay = true
+playback_type = 1
+
+[node name="base" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_akjvq")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_o0nkl")
+
+[node name="middle_blur" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_egahm")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="vignett" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_f0y7j")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.25
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_bottom = -4.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Control" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="drag" type="RichTextLabel" parent="Panel/MarginContainer/Control"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center]Drag an image onto this window to set the background image.[/center]"
+fit_content = true
+
+[node name="talabel" type="RichTextLabel" parent="Panel/MarginContainer/Control"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center]Tint A[/center]"
+fit_content = true
+
+[node name="tinta" type="ColorPickerButton" parent="Panel/MarginContainer/Control" node_paths=PackedStringArray("manager")]
+layout_mode = 2
+text = "TintA"
+flat = true
+color = Color(0.635294, 0.870588, 0.815686, 1)
+script = ExtResource("9_0ytqx")
+manager = NodePath("../../../../base")
+shader_param = "base_colour"
+
+[node name="tblabel" type="RichTextLabel" parent="Panel/MarginContainer/Control"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center]Tint B[/center]"
+fit_content = true
+
+[node name="tintb" type="ColorPickerButton" parent="Panel/MarginContainer/Control" node_paths=PackedStringArray("manager")]
+layout_mode = 2
+text = "TintB"
+flat = true
+color = Color(0.388235, 0.533333, 0.694118, 1)
+script = ExtResource("9_0ytqx")
+manager = NodePath("../../../../base")
+shader_param = "dark_colour"
+
+[node name="Button" type="Button" parent="Panel/MarginContainer/Control" node_paths=PackedStringArray("manager", "ui_base")]
+layout_mode = 2
+text = "Begin Render"
+script = ExtResource("9_sky72")
+manager = NodePath("../../../../base")
+ui_base = NodePath("../../..")
+
+[node name="render" type="RichTextLabel" parent="Panel/MarginContainer/Control"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center]When you start a render all the ui will disappear, that's intended just wait.[/center]"
+fit_content = true
+
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/Control"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ffmpeg" type="RichTextLabel" parent="Panel/MarginContainer/Control"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center]Once you have all 300 images, you can use this ffmpeg command to convert it to a .webm rift can load.
+Put it inside of a .sh or .bat in the same folder as the images.
+Windows users will need to call ffmpeg.exe instead of ffmpeg, and ensure ffmpeg is on their path or copy ffmpeg.exe to the same folder[/center]"
+fit_content = true
+
+[node name="CodeEdit" type="CodeEdit" parent="Panel/MarginContainer/Control"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+text = "ffmpeg -framerate 30 -pattern_type glob -i '*.png' -c:v libvpx -c:a libvorbis -b:v 20M out.webm"
+editable = false
+wrap_mode = 1
