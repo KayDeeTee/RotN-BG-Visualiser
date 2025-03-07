@@ -11,7 +11,7 @@ func on_finish():
 	var path = ProjectSettings.globalize_path("user://")	
 	OS.shell_open(path)
 	
-	if OS.get_name() == "-Linux":
+	if OS.get_name() == "Linux":
 		var file_text = "ffmpeg -framerate 30 -pattern_type glob -i '*.png' -c:v libvpx -c:a libvorbis -b:v 20M out.webm"
 		var fa = FileAccess.open( path+"/ff.sh", FileAccess.WRITE )
 		fa.store_string(file_text)
