@@ -56,7 +56,7 @@ void fragment() {
 	//dist = 1.0-step( 0.995, dist );
 	//if( mask3w < percent ){ dist = 1.0; }
 	//if( mask3w < percent-0.05 ){ dist = 0.0; }
-	//if( mask3w < 0.05 ){ 
+	//if( mask3w < 0.05 ){
 	//	dist = 0.0;
 	//}
 

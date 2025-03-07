@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://t7xgn2mlmxl1"]
+[gd_scene load_steps=15 format=3 uid="uid://t7xgn2mlmxl1"]
 
 [ext_resource type="Shader" uid="uid://jrratcxupmrp" path="res://shaders/rotn_vis.gdshader" id="2_m2mkp"]
 [ext_resource type="Texture2D" uid="uid://dasii3l0ek351" path="res://shaders/mask.png" id="3_210ln"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://d0qeh6j46ou8h" path="res://ui/mat_tint.gd" id="9_0ytqx"]
 [ext_resource type="Shader" uid="uid://btlsnd3clirux" path="res://shaders/blur_middle.gdshader" id="9_p55pq"]
 [ext_resource type="Script" uid="uid://dfox8n42j8rkk" path="res://ui/begin_render.gd" id="9_sky72"]
+[ext_resource type="Script" uid="uid://cjo5dns0ltkx2" path="res://ui/ffmpeg_click.gd" id="11_pxugv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_akjvq"]
 shader = ExtResource("2_m2mkp")
@@ -80,7 +81,7 @@ grow_vertical = 2
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 0.25
+anchor_right = 0.3
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
@@ -157,14 +158,15 @@ size_flags_vertical = 3
 [node name="ffmpeg" type="RichTextLabel" parent="Panel/MarginContainer/Control"]
 layout_mode = 2
 bbcode_enabled = true
-text = "[center]Once you have all 300 images, you can use this ffmpeg command to convert it to a .webm rift can load.
-Put it inside of a .sh or .bat in the same folder as the images.
-Windows users will need to call ffmpeg.exe instead of ffmpeg, and ensure ffmpeg is on their path or copy ffmpeg.exe to the same folder[/center]"
 fit_content = true
+script = ExtResource("11_pxugv")
 
 [node name="CodeEdit" type="CodeEdit" parent="Panel/MarginContainer/Control"]
+visible = false
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 text = "ffmpeg -framerate 30 -pattern_type glob -i '*.png' -c:v libvpx -c:a libvorbis -b:v 20M out.webm"
 editable = false
 wrap_mode = 1
+
+[connection signal="meta_clicked" from="Panel/MarginContainer/Control/ffmpeg" to="Panel/MarginContainer/Control/ffmpeg" method="_on_meta_clicked"]
