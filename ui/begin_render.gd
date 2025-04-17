@@ -22,8 +22,8 @@ func on_finish():
 		
 		var file_list = ""
 		for x in range(300):
-			file_list += "file 'frame-%04d.png'\n" % x
-			file_list += "duration %f'\n" % (1/30.0) 
+			file_list += "file 'frame-%04d.png'\n" % (x+1)
+			file_list += "duration %f\n" % (1/30.0) 
 		var fl = FileAccess.open( path+"/ff_filenames.txt", FileAccess.WRITE )
 		fl.store_string(file_list)
 		
